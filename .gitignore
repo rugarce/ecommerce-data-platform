@@ -25,7 +25,9 @@ airflow/standalone_admin_password.txt
 dbt/target/
 dbt/logs/
 dbt/dbt_packages/
+dbt/ecommerce/profiles.yml
 
 # Data
 data/raw/*
+data/raw_backup/*
 data/processed/*

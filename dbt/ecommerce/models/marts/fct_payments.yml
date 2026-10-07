@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: fct_payments
+    description: "Payment fact table."
+
+    columns:
+      - name: payment_id
+        description: "Unique payment identifier."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        description: "Order associated with the payment."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+
+      - name: amount
+        description: "Payment amount."
+        data_tests:
+          - not_null
+
+      - name: status
+        description: "Payment status."
+        data_tests:
+          - not_null

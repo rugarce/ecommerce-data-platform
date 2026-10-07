@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Date dimension."
+
+    columns:
+      - name: date_day
+        description: "Calendar date."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: year
+        description: "Calendar year."
+        data_tests:
+          - not_null
+
+      - name: month
+        description: "Calendar month number."
+        data_tests:
+          - not_null
+
+      - name: day
+        description: "Day of month."
+        data_tests:
+          - not_null
