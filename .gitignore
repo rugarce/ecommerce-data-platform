@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.ruff_cache/
 
 # Virtual environment
 .venv/
@@ -17,17 +18,15 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Airflow
-airflow/logs/
-airflow/standalone_admin_password.txt
-
-# dbt
-dbt/target/
-dbt/logs/
-dbt/dbt_packages/
-dbt/ecommerce/profiles.yml
+# Airflow y dbt (generados; coincide en cualquier nivel)
+logs/
+target/
+dbt_packages/
+.user.yml
 
 # Data
 data/raw/*
-data/raw_backup/*
+!data/raw/.gitkeep
+data/raw_backup/
 data/processed/*
+!data/processed/.gitkeep
