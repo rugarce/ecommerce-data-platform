@@ -18,7 +18,7 @@ RAW_DIR = BASE_DIR / "data" / "raw"
 
 RUN_ID = os.getenv("AIRFLOW_CTX_DAG_RUN_ID", "manual")
 DB_CONFIG = {
-    "host": "postgres",
+    "host": os.getenv("POSTGRES_HOST", "postgres"),
     "port": os.getenv("POSTGRES_PORT", "5432"),
     "dbname": os.getenv("POSTGRES_DB", "ecommerce"),
     "user": os.getenv("POSTGRES_USER", "ecommerce_user"),
@@ -84,8 +84,8 @@ TABLES = {
 class ValidationError(Exception):
     pass
 
-def read_csv(filename: str, columns: list[str]) -> list[tuple]:
-    file_path = RAW_DIR / filename
+def read_csv(filename: str, columns: list[str], raw_dir: Path | None = None) -> list[tuple]:
+    file_path = (raw_dir or RAW_DIR) / filename
 
     if not file_path.exists():
         raise ValidationError(f"{filename}: no existe {file_path}")

@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+      - name: Tests del loader
+        run: python -m pytest tests -v
+
+  pipeline:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ecommerce_user
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: ecommerce
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ecommerce_user -d ecommerce"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: ecommerce_user
+      POSTGRES_PASSWORD: ci_password
+      POSTGRES_DB: ecommerce
+      PGHOST: localhost
+      PGUSER: ecommerce_user
+      PGPASSWORD: ci_password
+      PGDATABASE: ecommerce
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar dependencias
+        run: |
+          pip install -r requirements.txt
+          pip install dbt-core==1.12.5 dbt-postgres==1.11.0
+      - name: Crear esquema raw
+        run: |
+          psql -f sql/initialization/002_create_raw_schema.sql
+          psql -f sql/initialization/003_raw_audit.sql
+      - name: Generar datos de ejemplo
+        run: python src/ingestion/generate_raw_data.py
+      - name: Cargar datos raw
+        run: python src/ingestion/load_raw_data.py
+      - name: dbt build (modelos y tests)
+        working-directory: dbt/ecommerce
+        run: dbt build --profiles-dir .
+      - name: Verificar resultados
+        run: |
+          test "$(psql -tAc 'SELECT COUNT(*) FROM marts.fct_orders')" = "30"
+          test "$(psql -tAc 'SELECT COUNT(*) FROM marts.fct_payments')" = "24"
