@@ -143,7 +143,8 @@ def main() -> int:
                     rows = data[filename]
                     load_table(cursor, config["table"], config["columns"], rows)
                     cursor.execute(
-                        "INSERT INTO raw._load_audit (run_id, table_name, rows_loaded) VALUES (%s, %s, %s)",
+                        "INSERT INTO raw._load_audit (run_id, table_name, rows_loaded) "
+                        "VALUES (%s, %s, %s)",
                         (RUN_ID, config["table"], len(rows)),
                     )
                     log.info("Loaded %s rows into %s", len(rows), config["table"])
