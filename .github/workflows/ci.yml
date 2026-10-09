@@ -67,10 +67,14 @@ jobs:
       - name: dbt build (modelos y tests)
         working-directory: dbt/ecommerce
         run: dbt build --profiles-dir .
+      - name: dbt compile (valida los análisis)
+        working-directory: dbt/ecommerce
+        run: dbt compile --profiles-dir .
       - name: Verificar resultados
         run: |
           test "$(psql -tAc 'SELECT COUNT(*) FROM marts.fct_orders')" = "30"
           test "$(psql -tAc 'SELECT COUNT(*) FROM marts.fct_payments')" = "24"
+          test "$(psql -tAc 'SELECT COUNT(*) FROM marts.fct_order_items')" = "60"
 
   dag-tests:
     runs-on: ubuntu-latest
