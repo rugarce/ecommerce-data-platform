@@ -6,21 +6,26 @@ models:
 
     columns:
       - name: order_id
-        description: "Unique order identifier."
+        description: "Pedido al que pertenece la línea."
         data_tests:
           - not_null
-          - unique
-
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+      - name: product_id
+        description: "Producto vendido."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_id
       - name: customer_id
-        description: "Customer associated with the order."
+        description: "Cliente que hizo el pedido."
         data_tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_customer')
                 field: customer_id
-
-      - name: order_status
-        description: "Current status of the order."
-        data_tests:
-          - not_null
