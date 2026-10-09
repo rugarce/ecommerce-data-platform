@@ -34,7 +34,6 @@ with DAG(
     max_active_runs=1,
     tags=["ecommerce", "dbt"],
 ) as dag:
-
     load_raw_data = BashOperator(
         task_id="load_raw_data",
         bash_command="python /opt/airflow/src/ingestion/load_raw_data.py",

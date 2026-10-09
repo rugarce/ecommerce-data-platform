@@ -1,8 +1,7 @@
-from pathlib import Path
 import csv
-from datetime import datetime, timedelta
 import random
-
+from datetime import datetime, timedelta
+from pathlib import Path
 
 SEED = 42
 
@@ -58,9 +57,7 @@ def generate_customers() -> list[dict]:
         first_name = first_names[(customer_id - 1) % len(first_names)]
         last_name = last_names[(customer_id - 1) % len(last_names)]
 
-        created_at = datetime(2025, 1, 1) + timedelta(
-            days=customer_id * 7
-        )
+        created_at = datetime(2025, 1, 1) + timedelta(days=customer_id * 7)
 
         customers.append(
             {
@@ -167,9 +164,7 @@ def generate_orders() -> list[dict]:
     for order_id in range(1, 31):
         customer_id = ((order_id - 1) % 20) + 1
 
-        order_date = datetime(2025, 2, 1) + timedelta(
-            days=order_id
-        )
+        order_date = datetime(2025, 2, 1) + timedelta(days=order_id)
 
         status = statuses[(order_id - 1) % len(statuses)]
 
@@ -195,8 +190,7 @@ def generate_order_items(products: list[dict]) -> list[dict]:
         product_count = 1 + (order_id % 3)
 
         selected_products = [
-            ((order_id + offset) % len(products)) + 1
-            for offset in range(product_count)
+            ((order_id + offset) % len(products)) + 1 for offset in range(product_count)
         ]
 
         for product_id in selected_products:
@@ -228,10 +222,7 @@ def calculate_order_totals(
     for item in order_items:
         order_id = item["order_id"]
 
-        amount = (
-            float(item["quantity"])
-            * float(item["unit_price"])
-        )
+        amount = float(item["quantity"]) * float(item["unit_price"])
 
         totals[order_id] = totals.get(order_id, 0) + amount
 
@@ -252,24 +243,16 @@ def generate_payments(orders: list[dict]) -> list[dict]:
         if order["status"] == "cancelled":
             continue
 
-        payment_status = (
-            "completed"
-            if order["status"] == "completed"
-            else "pending"
-        )
+        payment_status = "completed" if order["status"] == "completed" else "pending"
 
-        payment_date = datetime.fromisoformat(
-            order["order_date"]
-        ) + timedelta(days=1)
+        payment_date = datetime.fromisoformat(order["order_date"]) + timedelta(days=1)
 
         payments.append(
             {
                 "payment_id": order["order_id"],
                 "order_id": order["order_id"],
                 "payment_date": payment_date.date().isoformat(),
-                "payment_method": payment_methods[
-                    (order["order_id"] - 1) % len(payment_methods)
-                ],
+                "payment_method": payment_methods[(order["order_id"] - 1) % len(payment_methods)],
                 "amount": order["total_amount"],
                 "status": payment_status,
             }

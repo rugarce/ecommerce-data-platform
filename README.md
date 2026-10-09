@@ -1,0 +1,1 @@
+![CI](https://github.com/rugarce/ecommerce-data-platform/actions/workflows/ci.yml/badge.svg)

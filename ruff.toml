@@ -1,0 +1,6 @@
+target-version = "py312"
+line-length = 100
+extend-exclude = ["dbt/ecommerce/target", "logs"]
+
+[lint]
+select = ["E", "F", "I", "B", "UP"]

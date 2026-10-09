@@ -21,7 +21,7 @@ jobs:
 
   pipeline:
     runs-on: ubuntu-latest
-    needs: unit-tests
+    needs: [lint, unit-tests]
     services:
       postgres:
         image: postgres:16
@@ -87,3 +87,18 @@ jobs:
             --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-3.0.6/constraints-3.12.txt"
       - name: Test de integridad del DAG
         run: python -m pytest tests/test_dag_integrity.py -v
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+      - name: Lint (ruff check)
+        run: ruff check .
+      - name: Formato (ruff format --check)
+        run: ruff format --check .

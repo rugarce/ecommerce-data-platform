@@ -1,6 +1,5 @@
-import pytest
-
 import load_raw_data as loader
+import pytest
 
 COLUMNS = ["id", "name"]
 

@@ -81,8 +81,10 @@ TABLES = {
     },
 }
 
+
 class ValidationError(Exception):
     pass
+
 
 def read_csv(filename: str, columns: list[str], raw_dir: Path | None = None) -> list[tuple]:
     file_path = (raw_dir or RAW_DIR) / filename
@@ -140,8 +142,10 @@ def main() -> int:
                 for filename, config in TABLES.items():
                     rows = data[filename]
                     load_table(cursor, config["table"], config["columns"], rows)
-                    cursor.execute("INSERT INTO raw._load_audit (run_id, table_name, rows_loaded) VALUES (%s, %s, %s)",
-                                   (RUN_ID, config["table"], len(rows)),)
+                    cursor.execute(
+                        "INSERT INTO raw._load_audit (run_id, table_name, rows_loaded) VALUES (%s, %s, %s)",
+                        (RUN_ID, config["table"], len(rows)),
+                    )
                     log.info("Loaded %s rows into %s", len(rows), config["table"])
     except psycopg.Error as exc:
         log.error("Carga fallida, se ha hecho rollback de todas las tablas: %s", exc)
