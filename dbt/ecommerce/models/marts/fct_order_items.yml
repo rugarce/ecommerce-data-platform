@@ -14,19 +14,22 @@ models:
         data_tests:
           - not_null
           - relationships:
-              to: ref('fct_orders')
-              field: order_id
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
       - name: product_id
         description: "Producto vendido."
         data_tests:
           - not_null
           - relationships:
-              to: ref('dim_product')
-              field: product_id
+              arguments:
+                to: ref('dim_product')
+                field: product_id
       - name: customer_id
         description: "Cliente que hizo el pedido."
         data_tests:
           - not_null
           - relationships:
-              to: ref('dim_customer')
-              field: customer_id
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id

@@ -2,30 +2,19 @@ version: 2
 
 models:
   - name: fct_orders
-    description: "Order fact table."
-
+    description: "Hechos a nivel de pedido: una fila por pedido."
     columns:
       - name: order_id
-        description: "Pedido al que pertenece la línea."
         data_tests:
+          - unique
           - not_null
-          - relationships:
-              arguments:
-                to: ref('fct_orders')
-                field: order_id
-      - name: product_id
-        description: "Producto vendido."
-        data_tests:
-          - not_null
-          - relationships:
-              arguments:
-                to: ref('dim_product')
-                field: product_id
       - name: customer_id
-        description: "Cliente que hizo el pedido."
         data_tests:
           - not_null
           - relationships:
               arguments:
                 to: ref('dim_customer')
                 field: customer_id
+      - name: order_status
+        data_tests:
+          - not_null
